@@ -31,14 +31,13 @@ export class AuthService {
     }
 
     async signIn(user: User) {
-        const payload = { email: user.email, sub: user._id };
+        const payload = { user };
         return {
             accessToken: this.jwtService.sign(payload),
         };
     }
 
     async validateUser(email: string, pass: string): Promise<User> {
-        console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
         const user = await this.userModel.findOne({ email });
 
         if (!user) {
