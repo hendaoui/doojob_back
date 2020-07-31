@@ -16,4 +16,8 @@ export class UserService {
       return users.find(user => user.email === email);
     });
   }
+
+  async verifyAccount(data): Promise<any> {
+    return this.userModel.findOneAndUpdate({email: data?.email}, {cardBack: data?.cardBack, cardFace: data?.cardFace, isApproved: true}).exec();
+  }
 }
