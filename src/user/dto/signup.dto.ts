@@ -12,4 +12,8 @@ export class SignupDto {
   readonly email: string;
   @IsNotEmpty()
   readonly password: string;
+
+  readonly isApproved: boolean;
+  
+  readonly active: boolean;
 }

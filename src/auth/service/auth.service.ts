@@ -2,23 +2,24 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User } from '../../user/schemas/user.schema';
 import { SignupDto } from './../../user/dto/signup.dto';
-import { Injectable, ConflictException, HttpStatus } from '@nestjs/common';
+import { Injectable, ConflictException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+import { sign } from 'crypto';
 
 @Injectable()
 export class AuthService {
     constructor(
-        @InjectModel('User') private userModel: Model<any>,
+        @InjectModel('User') private userModel: Model<User>,
         private jwtService: JwtService
     ) { }
 
     async signUp(signupDto: SignupDto): Promise<void> {
-        const { email, password, firstName, lastName, phoneNumber } = signupDto;
+        const hashedPassword = await bcrypt.hash(signupDto.password, 10);
 
-        const hashedPassword = await bcrypt.hash(password, 10);
+        const {password, ...data} = signupDto;
 
-        const user = new this.userModel({ email, password: hashedPassword, firstName, lastName, phoneNumber });
+        const user = new this.userModel({ password: hashedPassword, ...data });
 
         try {
             await user.save();
@@ -31,7 +32,17 @@ export class AuthService {
     }
 
     async signIn(user: User) {
-        const payload = { user };
+        const userData: any = user;
+        const payload = { 
+            id: userData._id,
+            firstName: userData.firstName,
+            lastName: userData.lastName,
+            photo: userData.photo,
+            phoneNumber: userData.phoneNumber,
+            email: userData.email,
+            isApproved: userData.isApproved,
+            createdAt: userData.createdAt
+         };
         return {
             accessToken: this.jwtService.sign(payload),
         };
