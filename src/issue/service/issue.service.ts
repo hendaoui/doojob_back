@@ -10,9 +10,9 @@ export class IssueService {
     constructor(
         @InjectModel('Issue') private issueModel: Model<Issue>,
         private userService: UserService
-    ) {}
+    ) { }
 
-    async createIssue(createIssueDto: CreateIssueDto): Promise<Issue> {      
+    async createIssue(createIssueDto: CreateIssueDto): Promise<Issue> {
         const createdIssue = new this.issueModel(createIssueDto);
         return await createdIssue.save();
     }
@@ -22,14 +22,20 @@ export class IssueService {
 
         let newList: any = await list.map(async issue => {
             let user = await this.userService.findOne(issue.author)
-            
-            return ({...issue, author: {
-                name: `${user?.firstName} ${user?.lastName}`,
-                photo: user?.photo,
-                rating: user?.raiting
-            }})
+
+            return ({
+                ...issue, author: {
+                    name: `${user?.firstName} ${user?.lastName}`,
+                    photo: user?.photo,
+                    rating: user?.raiting
+                }
+            })
         })
 
-        return Promise.all(newList);
-      }
+        return Promise.all(newList.reverse());
+    }
+
+    async findOne(id): Promise<Issue> {
+        return this.issueModel.findOne({_id: id})
+    }
 }
