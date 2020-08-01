@@ -16,4 +16,6 @@ export class SignupDto {
   readonly isApproved: boolean;
   
   readonly active: boolean;
+
+  readonly raiting: boolean;
 }

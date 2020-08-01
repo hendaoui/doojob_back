@@ -35,6 +35,9 @@ export class User extends Document {
   
   @Prop({required: false, default: true})
   active: boolean;
+
+  @Prop({required: false, default: 0})
+  raiting: number;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
