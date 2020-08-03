@@ -37,7 +37,6 @@ export class AuthService {
             id: userData._id,
             firstName: userData.firstName,
             lastName: userData.lastName,
-            photo: userData.photo,
             phoneNumber: userData.phoneNumber,
             email: userData.email,
             isApproved: userData.isApproved,

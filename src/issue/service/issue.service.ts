@@ -26,6 +26,7 @@ export class IssueService {
             return ({
                 ...issue, author: {
                     name: `${user?.firstName} ${user?.lastName}`,
+                    email: user?.email,
                     photo: user?.photo,
                     rating: user?.raiting
                 }
